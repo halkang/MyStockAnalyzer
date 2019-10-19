@@ -18,9 +18,11 @@ namespace MyStockAnalyzer.Helpers
 
         private static WebClient getNewWebClient()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var wc = new WebClient();
             wc.Headers.Add("User-Agent", HttpHelper.GetRandomAgent());
-            wc.Encoding = Encoding.UTF8;
+            wc.Encoding = System.Text.Encoding.GetEncoding("BIG5");
+            //wc.Encoding = Encoding.UTF8;
             return wc;
         }
 
@@ -59,15 +61,15 @@ namespace MyStockAnalyzer.Helpers
             result.AddRange(downloadStockDataList(ConfigHelper.StockListUrl2));
 
             // 下載權證標的股票
-            List<string> warrantTargetIds = downloadWarrantTargetStockAndETFIds();
-            foreach (string id in warrantTargetIds)
-            {
-                var dat = result.Where(x => x.StockId == id);
-                if (dat.Count() > 0)
-                {
-                    dat.Single().WarrantTarget = "Y";
-                }
-            }
+            //List<string> warrantTargetIds = downloadWarrantTargetStockAndETFIds();
+            //foreach (string id in warrantTargetIds)
+            //{
+            //    var dat = result.Where(x => x.StockId == id);
+            //    if (dat.Count() > 0)
+            //    {
+            //        dat.Single().WarrantTarget = "Y";
+            //    }
+            //}
             return result;
         }
 
@@ -79,13 +81,16 @@ namespace MyStockAnalyzer.Helpers
             List<string> queryStocks = new List<string>();
             foreach (StockData stock in stockList)
             {
-                if (stock.Class == "上櫃")
+                if (stock != null)
                 {
-                    queryStocks.Add(String.Format("otc_{0}.tw_{1}", stock.StockId, date.ToString("yyyyMMdd")));
-                }
-                else
-                {
-                    queryStocks.Add(String.Format("tse_{0}.tw_{1}", stock.StockId, date.ToString("yyyyMMdd")));
+                    if (stock.Class == "上櫃")
+                    {
+                        queryStocks.Add(String.Format("otc_{0}.tw_{1}", stock.StockId, date.ToString("yyyyMMdd")));
+                    }
+                    else
+                    {
+                        queryStocks.Add(String.Format("tse_{0}.tw_{1}", stock.StockId, date.ToString("yyyyMMdd")));
+                    }
                 }
             }
 
@@ -125,7 +130,7 @@ namespace MyStockAnalyzer.Helpers
         private List<StockData> downloadStockDataList(string url)
         {
             List<StockData> result = new List<StockData>();
-
+            
             WebClient wc = getNewWebClient();
             string text = wc.DownloadString(url);
             string[] data = text.Split(new string[] { "</table>" }, StringSplitOptions.RemoveEmptyEntries);
@@ -270,6 +275,29 @@ namespace MyStockAnalyzer.Helpers
             string downloadUrl = String.Format(type == "1" ? ConfigHelper.StockPriceUrl1 : ConfigHelper.StockPriceUrl2,
                 type == "1" ? fetchDate.Year.ToString() : (fetchDate.Year - 1911).ToString("000"),
                 fetchDate.Month.ToString("00"), stock.StockId);
+
+
+            //上市的改抓
+            if (type == "1")
+                downloadUrl = string.Format(ConfigHelper.StockPriceUrl1, fetchDate.Year.ToString(), fetchDate.Month.ToString("00"), stock.StockId);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            return result;
+
+
 
             WebClient wc = getNewWebClient();
             string csvText = wc.DownloadString(downloadUrl);

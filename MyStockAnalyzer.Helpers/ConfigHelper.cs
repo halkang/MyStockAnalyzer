@@ -9,13 +9,16 @@ namespace MyStockAnalyzer.Helpers
     public class ConfigHelper
     {
         // 股票清單
-        public static string StockListUrl1 = "http://isin.twse.com.tw/isin/C_public.jsp?strMode=2";
+        public static string StockListUrl1 = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=2";
+                                              
 
-        public static string StockListUrl2 = "http://isin.twse.com.tw/isin/C_public.jsp?strMode=4";
+        public static string StockListUrl2 = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=4";
 
-        // 股價資訊
-        public static string StockPriceUrl1 =
-            "http://www.twse.com.tw/ch/trading/exchange/STOCK_DAY/STOCK_DAY_print.php?genpage=genpage/Report{0}{1}/{0}{1}_F3_1_8_{2}.php&type=csv";
+        // 股價資訊(上市)
+        //https://www.twse.com.tw/exchangeReport/STOCK_DAY?date=20190801&stockNo=2330
+        public static string StockPriceUrl1 = "https://www.twse.com.tw/exchangeReport/STOCK_DAY?date={0}{1}01&stockNo={2}";
+        //public static string StockPriceUrl1 =
+        //"http://www.twse.com.tw/ch/trading/exchange/STOCK_DAY/STOCK_DAY_print.php?genpage=genpage/Report{0}{1}/{0}{1}_F3_1_8_{2}.php&type=csv";
 
         public static string StockPriceUrl2 =
             "http://www.gretai.org.tw/web/stock/aftertrading/daily_trading_info/st43_download.php?l=zh-tw&d={0}/{1}&stkno={2}&s=0,asc,0";

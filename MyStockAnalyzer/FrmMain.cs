@@ -55,11 +55,11 @@ namespace MyStockAnalyzer
             stockSelectionAlgorithms = StockSelectionAlgorithmHelper.GetDefaultAlgorithms();
             setStockAlgorithmsLabel();
 
-            refreshWarrant();
+            //refreshWarrant();
 
             txtMemo.Text = memoModel.GetMemo();
 
-            loadStockChart("0050", true);
+            //loadStockChart("0050", true);
         }
 
         private void loadStockChart(string stockId, bool getRealTimeData)
@@ -145,12 +145,12 @@ namespace MyStockAnalyzer
             LogHelper.SetLogMessage("更新大盤資訊");
 
             // 3. 更新ETF成份股
-            LogHelper.SetLogMessage("更新ETF成份股");
-            updateEtfStocks();
+            //LogHelper.SetLogMessage("更新ETF成份股");
+            ////updateEtfStocks();
 
-            // 4. 更新個股資訊
+            //// 4. 更新個股資訊
             LogHelper.SetLogMessage("更新股票價格資訊");
-            // updateAllStockPrice(stockDataList);
+            updateAllStockPrice(stockDataList);
 
             LogHelper.SetLogMessage("完成");
 
@@ -218,6 +218,11 @@ namespace MyStockAnalyzer
                         break;
                     }
                 } while (true);
+
+
+                break;
+
+
             }
         }
 

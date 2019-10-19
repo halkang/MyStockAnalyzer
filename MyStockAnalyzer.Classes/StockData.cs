@@ -12,7 +12,7 @@ namespace MyStockAnalyzer.Classes
         public string StockName { get; set; }
         public string Class { get; set; }
         public string Industry { get; set; }
-        public Nullable<System.DateTime> Updated { get; set; }
+        public Nullable<System.DateTime> Updated   { get; set; }
         public string WarrantTarget { get; set; }
     }
 }

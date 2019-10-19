@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MyStockAnalyzer.EntityModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -10,11 +12,23 @@ namespace MyStockAnalyzer.Models
 {
     public class StockModel
     {
+
+
+
+
+
+
         private StockEntities _db;
 
         public StockModel()
         {
             _db = new StockEntities();
+
+
+            //StockEntities db = new StockEntities();
+            //var DataBaseScript = ((IObjectContextAdapter)db).ObjectContext.CreateDatabaseScript();
+
+
         }
 
         #region 取得股票名稱資訊
@@ -212,7 +226,7 @@ namespace MyStockAnalyzer.Models
             var existStockData = from s in _db.StockData
                                  where stockIds.Contains(s.StockId)
                                  select s;
-            foreach (MyStockAnalyzer.Models.StockData stock in existStockData)
+            foreach (MyStockAnalyzer.EntityModels.StockData stock in existStockData)
             {
                 // 內容不一樣則更新
                 MyStockAnalyzer.Classes.StockData compareStock = stockDataList.Where(x => x.StockId == stock.StockId).First();
@@ -233,7 +247,7 @@ namespace MyStockAnalyzer.Models
             foreach (MyStockAnalyzer.Classes.StockData stock in nonExistStockData)
             {
                 stock.Updated = current;
-                _db.StockData.Add(new MyStockAnalyzer.Models.StockData()
+                _db.StockData.Add(new MyStockAnalyzer.EntityModels.StockData()
                 {
                     Class = stock.Class,
                     Industry = stock.Industry,
