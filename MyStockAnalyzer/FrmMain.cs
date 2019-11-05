@@ -33,7 +33,7 @@ namespace MyStockAnalyzer
         /// <summary>
         /// 下載股價資訊的執行緒
         /// </summary>
-        private Thread[] threadDownloadStockPrice = new Thread[10];
+        private Thread[] threadDownloadStockPrice = new Thread[3];
 
         /// <summary>
         /// 存放要更新的股價資訊
@@ -203,6 +203,7 @@ namespace MyStockAnalyzer
         {
             foreach (MyStockAnalyzer.Classes.StockData stock in stockDataList)
             {
+               
                 do
                 {
                     int workNum = getAvailableBackgroundWorkNum();
@@ -215,17 +216,20 @@ namespace MyStockAnalyzer
                             ));
 
                         threadDownloadStockPrice[workNum].Start(stock);
+
+                       
                         break;
                     }
                 } while (true);
 
 
-                break;
 
+                Thread.Sleep(10000);
 
             }
         }
 
+        static int tmpStockId = 1;
         /// <summary>
         /// 執行下載股價資訊執行緒
         /// </summary>
@@ -235,11 +239,18 @@ namespace MyStockAnalyzer
             if (obj is MyStockAnalyzer.Classes.StockData)
             {
                 MyStockAnalyzer.Classes.StockData stock = obj as MyStockAnalyzer.Classes.StockData;
+
                 List<MyStockAnalyzer.Classes.StockPrice> singleStockPrices = stockHelper.GetStockPriceDataList(stock, dtStockBgn.Value.Date, dtStockEnd.Value.Date);
+                //StockPrice singleStockPrices =new StockPrice();
+                //singleStockPrices.StockId = (tmpStockId+1).ToString();
+                
                 lock (this)
                 {
                     waitedUpdateSotckPrice.AddRange(singleStockPrices);
+                    //waitedUpdateSotckPrice.Add(singleStockPrices);
                 }
+
+               
             }
         }
 
@@ -249,7 +260,7 @@ namespace MyStockAnalyzer
         /// <returns></returns>
         private int getAvailableBackgroundWorkNum()
         {
-            for (int i = 0; i < 10; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 if (threadDownloadStockPrice[i] == null || threadDownloadStockPrice[i].ThreadState == ThreadState.Unstarted || threadDownloadStockPrice[i].ThreadState == ThreadState.Stopped)
                 {
@@ -266,11 +277,14 @@ namespace MyStockAnalyzer
         /// <returns></returns>
         private bool isAllBackgroundWorkerDone()
         {
-            for (int i = 0; i < 10; ++i)
+            for (int i = 0; i < 3; ++i)
             {
-                if (threadDownloadStockPrice[i].ThreadState == ThreadState.Running)
-                {
-                    return false;
+                if (threadDownloadStockPrice[i] !=null)
+                { 
+                    if (threadDownloadStockPrice[i].ThreadState == ThreadState.Running)
+                     {
+                        return false;
+                     }
                 }
             }
             return true;
