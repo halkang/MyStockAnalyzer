@@ -139,6 +139,7 @@ namespace MyStockAnalyzer
             List<MyStockAnalyzer.Classes.StockData> stockDataList = stockHelper.GetStockDataList();
 
             LogHelper.SetLogMessage("更新股票代碼");
+
             model.UpdateStockList(stockDataList);
 
             // 2. 更新大盤資訊
@@ -150,7 +151,10 @@ namespace MyStockAnalyzer
 
             //// 4. 更新個股資訊
             LogHelper.SetLogMessage("更新股票價格資訊");
-            updateAllStockPrice(stockDataList);
+            var nStockList = stockDataList.Where(w => w.Class == "上市").ToList();
+
+            updateAllStockPrice(nStockList);
+            //updateAllStockPrice(stockDataList);
 
             LogHelper.SetLogMessage("完成");
 
@@ -201,7 +205,7 @@ namespace MyStockAnalyzer
 
         private void startDownloadAllstockPrice(List<MyStockAnalyzer.Classes.StockData> stockDataList)
         {
-            foreach (MyStockAnalyzer.Classes.StockData stock in stockDataList)
+            foreach (MyStockAnalyzer.Classes.StockData stock in stockDataList.Take(10))
             {
                
                 do
@@ -224,7 +228,7 @@ namespace MyStockAnalyzer
 
 
 
-                Thread.Sleep(10000);
+                Thread.Sleep(3000);
 
             }
         }
@@ -241,13 +245,12 @@ namespace MyStockAnalyzer
                 MyStockAnalyzer.Classes.StockData stock = obj as MyStockAnalyzer.Classes.StockData;
 
                 List<MyStockAnalyzer.Classes.StockPrice> singleStockPrices = stockHelper.GetStockPriceDataList(stock, dtStockBgn.Value.Date, dtStockEnd.Value.Date);
-                //StockPrice singleStockPrices =new StockPrice();
-                //singleStockPrices.StockId = (tmpStockId+1).ToString();
+                 
                 
                 lock (this)
                 {
                     waitedUpdateSotckPrice.AddRange(singleStockPrices);
-                    //waitedUpdateSotckPrice.Add(singleStockPrices);
+                     
                 }
 
                

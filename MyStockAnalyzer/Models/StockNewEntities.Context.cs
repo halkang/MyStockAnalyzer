@@ -13,10 +13,10 @@ namespace MyStockAnalyzer.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class StockEntities : DbContext
+    public partial class StockNewEntities : DbContext
     {
-        public StockEntities()
-            : base("name=StockEntities")
+        public StockNewEntities()
+            : base("name=StockNewEntities")
         {
         }
     
@@ -25,11 +25,11 @@ namespace MyStockAnalyzer.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<StockData> StockData { get; set; }
-        public virtual DbSet<StockPrice> StockPrice { get; set; }
-        public virtual DbSet<SelectionHistory> SelectionHistory { get; set; }
         public virtual DbSet<Memo> Memo { get; set; }
-        public virtual DbSet<EtfStock> EtfStock { get; set; }
+        public virtual DbSet<SelectionHistory> SelectionHistory { get; set; }
+        public virtual DbSet<StockData> StockData { get; set; }
         public virtual DbSet<StockDividend> StockDividend { get; set; }
+        public virtual DbSet<StockPrice> StockPrice { get; set; }
+        public virtual DbSet<EtfStock> EtfStock { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace MyStockAnalyzer.Models
     
     public partial class SelectionHistory
     {
+        public int Id { get; set; }
         public System.DateTime Date { get; set; }
         public string StockId { get; set; }
         public string MethodName { get; set; }

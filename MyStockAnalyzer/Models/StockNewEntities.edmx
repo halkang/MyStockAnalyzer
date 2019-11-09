@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="StockNewModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'stock.dbo.EtfStock' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+        <EntityType Name="EtfStock">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EtfId" Type="nvarchar" MaxLength="250" />
+          <Property Name="StockId" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="Memo">
+          <Key>
+            <PropertyRef Name="MemoId" />
+          </Key>
+          <Property Name="MemoId" Type="int" Nullable="false" />
+          <Property Name="MemoText" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="SelectionHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="MethodName" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="StockId" Type="nvarchar" MaxLength="250" />
+          <Property Name="MethodName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Memo" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="StockData">
+          <Key>
+            <PropertyRef Name="StockId" />
+          </Key>
+          <Property Name="StockId" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="StockName" Type="nvarchar" MaxLength="250" />
+          <Property Name="Class" Type="nvarchar" MaxLength="250" />
+          <Property Name="Industry" Type="nvarchar" MaxLength="250" />
+          <Property Name="Updated" Type="datetime" />
+          <Property Name="WarrantTarget" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="StockDividend">
+          <Key>
+            <PropertyRef Name="StockId" />
+          </Key>
+          <Property Name="StockId" Type="int" Nullable="false" />
+          <Property Name="Year" Type="float" />
+          <Property Name="CashDividends" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="StockDividends" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="StockPrice">
+          <Key>
+            <PropertyRef Name="StockId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="StockId" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Open" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Close" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="High" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Low" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="StockNewModelStoreContainer">
+          <EntitySet Name="Memo" EntityType="Self.Memo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SelectionHistory" EntityType="Self.SelectionHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StockData" EntityType="Self.StockData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StockDividend" EntityType="Self.StockDividend" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StockPrice" EntityType="Self.StockPrice" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EtfStock" EntityType="Self.EtfStock" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [EtfStock].[id] AS [id], 
+    [EtfStock].[EtfId] AS [EtfId], 
+    [EtfStock].[StockId] AS [StockId]
+    FROM [dbo].[EtfStock] AS [EtfStock]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StockNewModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Memo">
+          <Key>
+            <PropertyRef Name="MemoId" />
+          </Key>
+          <Property Name="MemoId" Type="Int32" Nullable="false" />
+          <Property Name="MemoText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SelectionHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="MethodName" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StockId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="MethodName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Memo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="StockData">
+          <Key>
+            <PropertyRef Name="StockId" />
+          </Key>
+          <Property Name="StockId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="StockName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Class" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Industry" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Updated" Type="DateTime" Precision="3" />
+          <Property Name="WarrantTarget" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="StockDividend">
+          <Key>
+            <PropertyRef Name="StockId" />
+          </Key>
+          <Property Name="StockId" Type="Int32" Nullable="false" />
+          <Property Name="Year" Type="Double" />
+          <Property Name="CashDividends" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="StockDividends" Type="Decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="StockPrice">
+          <Key>
+            <PropertyRef Name="StockId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="StockId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Open" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Close" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="High" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Low" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EtfStock">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EtfId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="StockId" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="StockNewEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Memo" EntityType="Self.Memo" />
+          <EntitySet Name="SelectionHistory" EntityType="Self.SelectionHistory" />
+          <EntitySet Name="StockData" EntityType="Self.StockData" />
+          <EntitySet Name="StockDividend" EntityType="Self.StockDividend" />
+          <EntitySet Name="StockPrice" EntityType="Self.StockPrice" />
+          <EntitySet Name="EtfStock" EntityType="Self.EtfStock" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StockNewModelStoreContainer" CdmEntityContainer="StockNewEntities">
+          <EntitySetMapping Name="Memo">
+            <EntityTypeMapping TypeName="StockNewModel.Memo">
+              <MappingFragment StoreEntitySet="Memo">
+                <ScalarProperty Name="MemoId" ColumnName="MemoId" />
+                <ScalarProperty Name="MemoText" ColumnName="MemoText" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SelectionHistory">
+            <EntityTypeMapping TypeName="StockNewModel.SelectionHistory">
+              <MappingFragment StoreEntitySet="SelectionHistory">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="StockId" ColumnName="StockId" />
+                <ScalarProperty Name="MethodName" ColumnName="MethodName" />
+                <ScalarProperty Name="Memo" ColumnName="Memo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StockData">
+            <EntityTypeMapping TypeName="StockNewModel.StockData">
+              <MappingFragment StoreEntitySet="StockData">
+                <ScalarProperty Name="StockId" ColumnName="StockId" />
+                <ScalarProperty Name="StockName" ColumnName="StockName" />
+                <ScalarProperty Name="Class" ColumnName="Class" />
+                <ScalarProperty Name="Industry" ColumnName="Industry" />
+                <ScalarProperty Name="Updated" ColumnName="Updated" />
+                <ScalarProperty Name="WarrantTarget" ColumnName="WarrantTarget" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StockDividend">
+            <EntityTypeMapping TypeName="StockNewModel.StockDividend">
+              <MappingFragment StoreEntitySet="StockDividend">
+                <ScalarProperty Name="StockId" ColumnName="StockId" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="CashDividends" ColumnName="CashDividends" />
+                <ScalarProperty Name="StockDividends" ColumnName="StockDividends" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StockPrice">
+            <EntityTypeMapping TypeName="StockNewModel.StockPrice">
+              <MappingFragment StoreEntitySet="StockPrice">
+                <ScalarProperty Name="StockId" ColumnName="StockId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Open" ColumnName="Open" />
+                <ScalarProperty Name="Close" ColumnName="Close" />
+                <ScalarProperty Name="High" ColumnName="High" />
+                <ScalarProperty Name="Low" ColumnName="Low" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EtfStock">
+            <EntityTypeMapping TypeName="StockNewModel.EtfStock">
+              <MappingFragment StoreEntitySet="EtfStock">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="EtfId" ColumnName="EtfId" />
+                <ScalarProperty Name="StockId" ColumnName="StockId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

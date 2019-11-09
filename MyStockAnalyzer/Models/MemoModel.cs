@@ -1,5 +1,4 @@
-﻿using MyStockAnalyzer.EntityModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +8,10 @@ namespace MyStockAnalyzer.Models
 {
     public class MemoModel
     {
-        StockEntities _db;
+        StockNewEntities _db;
         public MemoModel()
         {
-            _db = new StockEntities();
+            _db = new StockNewEntities();
         }
 
         public string GetMemo()

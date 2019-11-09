@@ -1,4 +1,4 @@
-﻿using MyStockAnalyzer.EntityModels;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -18,11 +18,11 @@ namespace MyStockAnalyzer.Models
 
 
 
-        private StockEntities _db;
+        private StockNewEntities _db;
 
         public StockModel()
         {
-            _db = new StockEntities();
+            _db = new StockNewEntities();
 
 
             //StockEntities db = new StockEntities();
@@ -226,7 +226,7 @@ namespace MyStockAnalyzer.Models
             var existStockData = from s in _db.StockData
                                  where stockIds.Contains(s.StockId)
                                  select s;
-            foreach (MyStockAnalyzer.EntityModels.StockData stock in existStockData)
+            foreach (MyStockAnalyzer.Models.StockData stock in existStockData)
             {
                 // 內容不一樣則更新
                 MyStockAnalyzer.Classes.StockData compareStock = stockDataList.Where(x => x.StockId == stock.StockId).First();
@@ -247,7 +247,7 @@ namespace MyStockAnalyzer.Models
             foreach (MyStockAnalyzer.Classes.StockData stock in nonExistStockData)
             {
                 stock.Updated = current;
-                _db.StockData.Add(new MyStockAnalyzer.EntityModels.StockData()
+                _db.StockData.Add(new MyStockAnalyzer.Models.StockData()
                 {
                     Class = stock.Class,
                     Industry = stock.Industry,

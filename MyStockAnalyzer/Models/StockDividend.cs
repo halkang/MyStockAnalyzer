@@ -14,9 +14,9 @@ namespace MyStockAnalyzer.Models
     
     public partial class StockDividend
     {
-        public string StockId { get; set; }
-        public long Year { get; set; }
-        public decimal CashDividends { get; set; }
-        public decimal StockDividends { get; set; }
+        public int StockId { get; set; }
+        public Nullable<double> Year { get; set; }
+        public Nullable<decimal> CashDividends { get; set; }
+        public Nullable<decimal> StockDividends { get; set; }
     }
 }

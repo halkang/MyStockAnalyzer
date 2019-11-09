@@ -1,7 +1,9 @@
 ﻿using MyStockAnalyzer.Classes;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -25,7 +27,14 @@ namespace MyStockAnalyzer.Helpers
             //wc.Encoding = Encoding.UTF8;
             return wc;
         }
-
+        private static WebClient getNewWebClientUtf()
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            var wc = new WebClient();
+            wc.Headers.Add("User-Agent", HttpHelper.GetRandomAgent());
+            wc.Encoding = Encoding.UTF8;
+            return wc;
+        }
         /// <summary>
         /// 下載股價資訊
         /// </summary>
@@ -130,7 +139,7 @@ namespace MyStockAnalyzer.Helpers
         private List<StockData> downloadStockDataList(string url)
         {
             List<StockData> result = new List<StockData>();
-            
+
             WebClient wc = getNewWebClient();
             string text = wc.DownloadString(url);
             string[] data = text.Split(new string[] { "</table>" }, StringSplitOptions.RemoveEmptyEntries);
@@ -279,9 +288,73 @@ namespace MyStockAnalyzer.Helpers
 
             //上市的改抓
             if (type == "1")
-                downloadUrl = string.Format(ConfigHelper.StockPriceUrl1, fetchDate.Year.ToString(), fetchDate.Month.ToString("00"), stock.StockId);
+            {
+
+                //"日期",     0
+                //"成交股數",  1
+                //"成交金額",  2
+                //"開盤價",    3 
+                //"最高價", 4
+                //"最低價", 5
+                //"收盤價", 6
+                //"漲跌價差" 7
+                //"成交筆數   8
 
 
+                downloadUrl = string.Format(ConfigHelper.StockPriceUrl1, fetchDate.Year.ToString() + fetchDate.Month.ToString("00"), stock.StockId);
+                WebClient wcutf = getNewWebClientUtf();
+                var jsonData_Org = wcutf.DownloadString(downloadUrl);
+
+
+                dynamic jsonData = JValue.Parse(jsonData_Org);
+                if (jsonData.data != null)
+                { 
+                    foreach (var item in jsonData.data)
+                    {
+                        decimal Open = 0, Close = 0, High = 0, Low = 0;
+                        Int32 Amount = 0;
+
+
+                        string DateStr = item[0].Value;
+                        DateTime _date;
+
+
+
+                        //108/11/01 
+                        
+                        CultureInfo tc = new System.Globalization.CultureInfo("zh-TW"); 
+                        tc.DateTimeFormat.Calendar = new System.Globalization.TaiwanCalendar();
+                        
+                        try
+                        {
+                            _date = DateTime.ParseExact(DateStr, "d", tc);
+                            
+                        }
+                        catch (FormatException)
+                        {
+                            throw new Exception("日期錯誤");
+                        }
+
+                        StockPrice priceData = new StockPrice();
+                        priceData.StockId = stock.StockId;
+                        priceData.Date = _date;
+                        priceData.Open = decimal.TryParse(item[3].Value, out Open) ? Open : 0;
+                        priceData.Close = decimal.TryParse(item[6].Value, out Close) ? Close : 0;
+                        priceData.High = decimal.TryParse(item[4].Value, out High) ? High : 0;
+                        priceData.Low = decimal.TryParse(item[5].Value, out Low) ? Low : 0;
+                        priceData.Amount = Int32.TryParse(item[1].Value.Replace(",", ""), out Amount) ? Amount / 1000 : 0;
+                        result.Add(priceData);
+
+
+                    }
+                }
+
+
+            }
+            else
+            {
+
+            }
 
 
 
@@ -398,18 +471,18 @@ namespace MyStockAnalyzer.Helpers
                     where row.Replace("\t", "").StartsWith("<td>") && row.Replace("\t", "").EndsWith("</td>")
                     select row.Replace("\t", "").Split(new string[] { "<td>", "</td>" }, StringSplitOptions.RemoveEmptyEntries)
                         into fields
-                        select new StockDividend()
-                        {
-                            StockId = stockId,
-                            Year = Convert.ToInt32(fields[0]),
-                            StockDividends = tryConvertToDecimal(fields[3]),
-                            CashDividends = tryConvertToDecimal(fields[4]),
-                            CashDividendsRate = tryConvertToDecimal(fields[6].Replace("%", "")),
-                            Price = tryConvertToDecimal(fields[5]),
-                            EPS = EPS,
-                            ROE = ROE,
-                            GrossMargin = grossMargin
-                        }).ToList();
+                    select new StockDividend()
+                    {
+                        StockId = stockId,
+                        Year = Convert.ToInt32(fields[0]),
+                        StockDividends = tryConvertToDecimal(fields[3]),
+                        CashDividends = tryConvertToDecimal(fields[4]),
+                        CashDividendsRate = tryConvertToDecimal(fields[6].Replace("%", "")),
+                        Price = tryConvertToDecimal(fields[5]),
+                        EPS = EPS,
+                        ROE = ROE,
+                        GrossMargin = grossMargin
+                    }).ToList();
         }
 
         private decimal tryConvertToDecimal(string input)

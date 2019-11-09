@@ -14,6 +14,6 @@ namespace MyStockAnalyzer.Classes
         public decimal Close { get; set; }
         public decimal High { get; set; }
         public decimal Low { get; set; }
-        public long Amount { get; set; }
+        public Int32 Amount { get; set; }
     }
 }

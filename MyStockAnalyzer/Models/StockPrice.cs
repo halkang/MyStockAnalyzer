@@ -20,6 +20,6 @@ namespace MyStockAnalyzer.Models
         public decimal Close { get; set; }
         public decimal High { get; set; }
         public decimal Low { get; set; }
-        public long Amount { get; set; }
+        public int Amount { get; set; }
     }
 }

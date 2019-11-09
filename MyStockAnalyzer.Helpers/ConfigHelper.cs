@@ -16,7 +16,9 @@ namespace MyStockAnalyzer.Helpers
 
         // 股價資訊(上市)
         //https://www.twse.com.tw/exchangeReport/STOCK_DAY?date=20190801&stockNo=2330
-        public static string StockPriceUrl1 = "https://www.twse.com.tw/exchangeReport/STOCK_DAY?date={0}{1}01&stockNo={2}";
+        public static string StockPriceUrl1 = "https://www.twse.com.tw/exchangeReport/STOCK_DAY?date={0}01&stockNo={1}";
+                                               
+
         //public static string StockPriceUrl1 =
         //"http://www.twse.com.tw/ch/trading/exchange/STOCK_DAY/STOCK_DAY_print.php?genpage=genpage/Report{0}{1}/{0}{1}_F3_1_8_{2}.php&type=csv";
 
